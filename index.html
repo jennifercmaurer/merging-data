@@ -14,7 +14,7 @@
         
     </head>
     <body>
-        <main class="container-fluid">
+        <main class="container-fluid" ng-app='AddressBook' ng-controller="AddressController">
             <header class="page-title">
                 <h1>City of Pawnee Address Book</h1>
             </header>
@@ -24,28 +24,27 @@
                 <div class="sort-ui">
                     <span>Sort By: </span>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default">Last Name</button>
-                        <button type="button" class="btn btn-default">First Name</button>
-                        <button type="button" class="btn btn-default">Department</button>
+                        <button type="button" class="btn btn-default" ng-click="sortBy('lastName')" ng-class="{active: (sortCol == 'lastName')}">Last Name</button>
+                        <button type="button" class="btn btn-default" ng-click="sortBy('firstName')" ng-class="{active: (sortCol == 'firstName')}">First Name</button>
+                        <button type="button" class="btn btn-default" ng-click="sortBy('department')" ng-class="{active: (sortCol == 'department')}">Department</button>
                     </div>
                 </div>
                 <!-- filter input; you will add attributes to make this filter the list based on value entered -->
                 <div class="filter-ui">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input type="text" class="form-control" ng-model="searchString" placeholder="Search...">
                 </div>
             </section>
 
             <section>
                 <ul class="cards">
-                    <li class="card">
-                        <!-- this img should show the employee picture --> 
-                        <img alt="">
+                    <li class="card" ng-repeat="employee in filteredEmployees = (employees | filter : searchString | orderBy : sortCol)">
+                        <img alt='picture of {{employee.firstName}} {{employee.lastName}}' src='{{employee.picUrl}}'>
                         <div class="details">
-                            <h2 class="name"> <!-- employee name goes here --> </h2>
-                            <p class="title"> <!-- employee title goes here --> </p>
-                            <p class="department"> <!-- employee department goes here --> </p>
-                            <p class="phone"><a> <!-- employee phone goes here (if present); hyperlink should dial number on mobile phone --> </a></p>
-                            <p class="email"><a> <!-- employee email goes here (if present); hyperlink should open a new email to email address --> </a></p>
+                            <h2 class="name">{{employee.firstName}} {{employee.lastName}}</h2>
+                            <p class="title"> {{employee.title}} </p>
+                            <p class="department"> {{employee.department}}</p>
+                            <p class="phone" ng-if="employee.phone != undefined"><a ng-href="tel:+{{employee.phone}}"> {{employee.phone}}</a></p>
+                            <p class="email" ng-if="employee.email != undefined"><a ng-href="mailto:{{employee.email}}">{{employee.email}}</a></p>
                         </div>
                     </li>
                 </ul>
